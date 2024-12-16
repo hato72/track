@@ -21,6 +21,8 @@ class User:
             self.users[user_id]["nickname"] = nickname
         if comment is not None:
             self.users[user_id]["comment"] = comment
+        else:
+            self.users[user_id]["comment"] = ""
         return self.users[user_id]
     
     def delete_user(self,user_id):

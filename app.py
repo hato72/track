@@ -3,12 +3,15 @@ from model import User
 from util import *
 
 app = Flask(__name__)
-user = User()
+def get_users():
+    return User()
 
+user = get_users()
 user.create_user("TaroYamada","PasSwd4TY","たろー","僕は元気です")
 
 @app.route('/signup',methods=["POST"])
 def signup():
+    user = get_users()
     data = request.json
     user_id = data.get("user_id")
     password = data.get("password")
@@ -37,6 +40,7 @@ def signup():
     
 @app.route('/users/<user_id>',methods=["GET"])
 def get_user(user_id):
+    user = get_users()
     auth_header = request.headers.get('Authorization')
     if not auth_header or not authenticate(auth_header,user):
         return jsonify({ "message":"Authentication failed" }),401
@@ -57,6 +61,7 @@ def get_user(user_id):
 
 @app.route("/users/<user_id>",methods=["PATCH"])
 def update_user(user_id):
+    user = get_users()
     auth_header = request.headers.get('Authorization')
     if not auth_header or not authenticate(auth_header,user):
         return jsonify({ "message":"Authentication failed" }),401
@@ -84,9 +89,10 @@ def update_user(user_id):
 
 @app.route("/close",methods=["POST"])
 def delete_account():
+    user = get_users()
     auth_header = request.headers.get('Authorization')
     if not auth_header or not authenticate(auth_header,user):
-        return jsonify({ "message":"Authentication failed" }),404
+        return jsonify({ "message":"Authentication failed" }),401
     user_id,_ = encode_auth(auth_header)
     user.delete_user(user_id)
     return jsonify({  "message": "Account and user successfully removed" }),200
