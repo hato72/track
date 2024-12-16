@@ -76,7 +76,7 @@ def update_user(user_id):
     
     user = user.update_user(user_id,nickname,comment)
     if not user:
-        return jsonify({ "message":"No user found" }),404
+        return jsonify({ "message":"No user found" }),403
     return jsonify({
         "message": "User successfully updated",
         "user": user
@@ -86,7 +86,7 @@ def update_user(user_id):
 def delete_account():
     auth_header = request.headers.get('Authorization')
     if not auth_header or not authenticate(auth_header,user):
-        return jsonify({ "message":"Authentication failed" }),401
+        return jsonify({ "message":"Authentication failed" }),404
     user_id,_ = encode_auth(auth_header)
     user.delete_user(user_id)
     return jsonify({  "message": "Account and user successfully removed" }),200
